@@ -1,17 +1,14 @@
-import { useOutletContext } from "react-router-dom";
 import Upgrade from "../../components/atoms/upgrade";
 import GameStatsCard from "../../components/molecules/game-stats-cards";
+import { useGameStore } from "../../store/gameStore";
 import { buildPrimaryStatCards } from "../../utils/stat-cards";
 
 export default function Shop() {
-  const {
-    money,
-    setMoney,
-    incomePerSecond,
-    setIncomePerSecond,
-    upgrades,
-    setUpgrades,
-  } = useOutletContext();
+  const money = useGameStore((state) => state.money);
+  const incomePerSecond = useGameStore((state) => state.incomePerSecond);
+  const upgrades = useGameStore((state) => state.upgrades);
+  const BUY_UPGRADE = useGameStore((state) => state.BUY_UPGRADE);
+
   const totalOwnedUpgrades = upgrades.reduce(
     (total, upgrade) => total + upgrade.count,
     0,
@@ -21,24 +18,6 @@ export default function Shop() {
     money,
     totalOwnedUpgrades,
   });
-
-  const addUpgrade = (id) => {
-    const currentUpgrade = upgrades.find((upgrade) => upgrade.id === id);
-    if (!currentUpgrade) return;
-
-    setIncomePerSecond((prev) => (prev += currentUpgrade.incomePerSecondGain));
-    setMoney(
-      (prev) =>
-        (prev -= Math.round(
-          currentUpgrade.baseCost * Math.pow(1.15, currentUpgrade.count),
-        )),
-    );
-    setUpgrades((prev) => [
-      ...prev.map((upgrade) =>
-        upgrade.id === id ? { ...upgrade, count: upgrade.count + 1 } : upgrade,
-      ),
-    ]);
-  };
 
   return (
     <>
@@ -55,7 +34,7 @@ export default function Shop() {
           <Upgrade
             key={upgrade.id}
             upgrade={upgrade}
-            onClick={addUpgrade}
+            onClick={BUY_UPGRADE}
             money={money}
           />
         ))}

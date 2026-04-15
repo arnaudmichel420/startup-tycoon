@@ -12,13 +12,17 @@
 ## Structure
 
 - `src/assets` : contient les ressources statiques du projet comme les images et icones.
-- `src/components` : contient les composants UI reutilisables partages entre plusieurs pages.
+- `src/components/atoms` : contient les composants UI simples comme `click-button.jsx`, `money-display.jsx`, `income-display.jsx` et `upgrade.jsx`.
+- `src/components/molecules` : contient des composants composes comme `game-stats-cards.jsx`, `game-insight-cards.jsx` et `game-header.jsx`.
+- `src/data` : contient les donnees statiques du projet, notamment `upgrades.js`.
 - `src/layout` : contient la structure generale de l'application, notamment `page-wrapper.jsx`.
 - `src/pages` : contient les pages routees de l'application comme `Game`, `Shop`, `Stats`, `Settings` et `NotFoundPage`.
 - `src/router` : contient la configuration des routes dans `router.jsx` et `routes.js`.
 - `src/services` : est prevu pour les fonctions d'acces aux donnees et aux futures sources externes.
 - `src/states` : est prevu pour l'etat global de l'application et sa logique de gestion.
+- `src/store` : contient le store global Zustand, notamment `gameStore.js`.
 - `src/styles` : est prevu pour les styles globaux et les fichiers de mise en forme communs.
+- `src/utils` : contient les fonctions utilitaires comme `formatNumber.js` et `stat-cards.jsx`.
 
 ## TP-5
 
@@ -41,3 +45,11 @@
 2. Oui, `src/pages/Game/index.jsx` et `src/pages/Shop/index.jsx` ont besoin des memes donnees, car les deux affichent l'argent, le revenu passif et l'etat des upgrades.
 3. Pour partager ces donnees sans store global, elles sont stockees dans `PageWrapper` puis transmises aux pages enfants avec `<Outlet context={...} />` et recuperees avec `useOutletContext()`.
 4. La solution devient fragile car `PageWrapper` commence a contenir trop de state et doit connaitre les besoins de plusieurs pages. Plus l'application grandit, plus il faut faire passer beaucoup de donnees et setters a travers le `context` de `Outlet`.
+
+## TP-9
+
+Schema simple du flux :
+
+```text
+View -> dispatch(Action) -> Store -> render(View)
+```

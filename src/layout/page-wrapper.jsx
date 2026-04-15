@@ -1,7 +1,11 @@
+import { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import IncomeDisplay from "../components/atoms/income-display";
+import MoneyDisplay from "../components/atoms/money-display";
 import routes from "../router/routes";
-import { useState, useEffect } from "react";
-import defaultUpgrades from "../data/upgrades";
+import { useGameStore } from "../store/gameStore";
+import { buildPrimaryStatCards } from "../utils/stat-cards";
+import GameStatsCard from "../components/molecules/game-stats-cards";
 
 const navLinkClassName = ({ isActive }) =>
   `rounded-full px-4 py-2 text-sm font-semibold tracking-[0.18em] uppercase transition ${
@@ -11,21 +15,24 @@ const navLinkClassName = ({ isActive }) =>
   }`;
 
 export default function PageWrapper() {
-  const [upgrades, setUpgrades] = useState(defaultUpgrades);
-  const [money, setMoney] = useState(0);
-  const [clickValue, setClickValue] = useState(1);
-  const [incomePerSecond, setIncomePerSecond] = useState(0);
+  const TICK = useGameStore((state) => state.TICK);
+  const money = useGameStore((state) => state.money);
+  const incomePerSecond = useGameStore((state) => state.incomePerSecond);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setMoney((prev) => prev + incomePerSecond);
-      //   console.log("toto");
+      TICK();
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [incomePerSecond, setMoney]);
+  }, [TICK]);
+
+  const statCards = buildPrimaryStatCards({
+    incomePerSecond,
+    money,
+  });
 
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-secondary/35 text-foreground">
@@ -61,18 +68,7 @@ export default function PageWrapper() {
         </header>
 
         <main className="flex-1 py-8">
-          <Outlet
-            context={{
-              money,
-              setMoney,
-              clickValue,
-              setClickValue,
-              incomePerSecond,
-              setIncomePerSecond,
-              upgrades,
-              setUpgrades,
-            }}
-          />
+          <Outlet />
         </main>
 
         <footer className="pb-6">
@@ -93,6 +89,16 @@ export default function PageWrapper() {
             </div>
           </div>
         </footer>
+
+        <div className="fixed right-4 bottom-4 z-30 grid gap-3 sm:right-6 sm:bottom-6">
+          {statCards
+            .filter((card) => card.id !== "upgrades")
+            ?.map((card) => (
+              <GameStatsCard key={card.id} eyebrow={card.eyebrow}>
+                {card.content}
+              </GameStatsCard>
+            ))}
+        </div>
       </div>
     </div>
   );
