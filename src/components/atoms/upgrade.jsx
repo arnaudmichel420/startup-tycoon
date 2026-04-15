@@ -17,7 +17,6 @@ const icons = {
 };
 
 export default function Upgrade({ upgrade, money = 100, onClick }) {
-
   const Icon = icons[upgrade.icon] ?? BriefcaseIcon;
   const actualCost = Math.round(
     upgrade.baseCost * Math.pow(1.15, upgrade.count),
@@ -48,6 +47,9 @@ export default function Upgrade({ upgrade, money = 100, onClick }) {
             </span>
             <span className="rounded-md bg-accent px-2 py-1 text-accent-foreground">
               +{upgrade.incomePerSecondGain} / sec
+            </span>
+            <span className="rounded-md px-2 py-1 text-accent-foreground">
+              {parseFloat(actualCost / upgrade.incomePerSecondGain).toFixed(1)} / click
             </span>
           </div>
         </div>

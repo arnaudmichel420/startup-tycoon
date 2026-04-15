@@ -1,14 +1,16 @@
-import { useOutletContext } from "react-router-dom";
 import ClickButton from "../../components/atoms/click-button";
 import GameInsightCard from "../../components/molecules/game-insight-cards";
 import GameStatsCard from "../../components/molecules/game-stats-cards";
+import { useGameStore } from "../../store/gameStore";
 import { buildPrimaryStatCards } from "../../utils/stat-cards";
 
 export default function Game() {
-  const { money, setMoney, clickValue, incomePerSecond, upgrades } =
-    useOutletContext();
+  const money = useGameStore((state) => state.money);
+  const clickValue = useGameStore((state) => state.clickValue);
+  const incomePerSecond = useGameStore((state) => state.incomePerSecond);
+  const upgrades = useGameStore((state) => state.upgrades);
+  const CLICK = useGameStore((state) => state.CLICK);
 
-  const addMoney = () => setMoney((prev) => prev + clickValue);
   const totalOwnedUpgrades = upgrades.reduce(
     (total, upgrade) => total + upgrade.count,
     0,
@@ -80,7 +82,7 @@ export default function Game() {
                 Lance un nouveau sprint et gagne {clickValue}$ a chaque clic.
               </p>
             </div>
-            <ClickButton clickValue={clickValue} onClick={addMoney} />
+            <ClickButton clickValue={clickValue} onClick={CLICK} />
           </div>
         </div>
       </div>
