@@ -1,3 +1,12 @@
-export default function IncomeDisplay({incomePerSecond}) {
-  return <p className="text-sm text-muted-foreground">Income: {incomePerSecond} $ / sec</p>;
+export default function IncomeDisplay({ incomePerSecond }) {
+  return (
+    <div className="flex items-end gap-2 text-foreground">
+      <span className="text-[1.55rem] leading-none font-bold tracking-tight sm:text-[1.8rem]">
+        {incomePerSecond}
+      </span>
+      <span className="pb-1 text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        $ / sec
+      </span>
+    </div>
+  );
 }
