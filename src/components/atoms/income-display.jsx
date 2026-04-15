@@ -1,3 +1,3 @@
-export default function IncomeDisplay() {
-  return <p className="text-sm text-muted-foreground">Income: 0 $ / sec</p>;
+export default function IncomeDisplay({incomePerSecond}) {
+  return <p className="text-sm text-muted-foreground">Income: {incomePerSecond} $ / sec</p>;
 }
