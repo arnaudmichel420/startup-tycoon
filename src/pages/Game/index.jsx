@@ -47,7 +47,7 @@ export default function Game() {
 
   return (
     <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-      <div className="relative overflow-hidden rounded-[2rem] border border-border bg-card px-6 py-8 shadow-xl sm:px-8">
+      <div className="relative overflow-hidden rounded-4xl border border-border bg-card px-6 py-8 shadow-xl sm:px-8">
         <div className="absolute -right-12 top-16 h-36 w-36 rounded-full bg-primary/10 blur-2xl" />
         <div className="absolute -left-12 bottom-0 h-32 w-32 rounded-full bg-accent/20 blur-2xl" />
 

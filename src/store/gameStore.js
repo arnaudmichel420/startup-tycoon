@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import defaultUpgrades from "../data/upgrades";
 
 export const useGameStore = create(
@@ -57,6 +57,37 @@ export const useGameStore = create(
     }),
     {
       name: "startup-tycoon-store",
+      version: 1,
+      storage: createJSONStorage(() => ({
+        getItem: (name) => {
+          const value = localStorage.getItem(name);
+          
+          if (!value) return null;
+
+          try {
+            const parsedValue = JSON.parse(value);
+
+            if (parsedValue.version !== 1) return null;
+            if (typeof parsedValue.state?.money !== "number") return null;
+
+            return value;
+          } catch {
+            return null;
+          }
+        },
+        setItem: (name, value) => {
+          const parsedValue = JSON.parse(value);
+
+          const newValue = {
+            saveAt: Date.now(),
+            ...parsedValue,
+          };
+          localStorage.setItem(name, JSON.stringify(newValue));
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name);
+        },
+      })),
     },
   ),
 );
