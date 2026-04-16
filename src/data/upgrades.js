@@ -96,7 +96,8 @@ const defaultUpgrades = [
     baseCost: 350000,
     incomePerSecondGain: 11000,
     count: 0,
-    description: "Un siege social imposant pour piloter une vraie multinationale.",
+    description:
+      "Un siege social imposant pour piloter une vraie multinationale.",
   },
   {
     id: "academy",
@@ -105,7 +106,8 @@ const defaultUpgrades = [
     baseCost: 900000,
     incomePerSecondGain: 25000,
     count: 0,
-    description: "Tu formes en continu les talents qui feront exploser la croissance.",
+    description:
+      "Tu formes en continu les talents qui feront exploser la croissance.",
   },
   {
     id: "venture-fund",
@@ -114,7 +116,8 @@ const defaultUpgrades = [
     baseCost: 2500000,
     incomePerSecondGain: 65000,
     count: 0,
-    description: "Le capital afflue et transforme ta startup en machine a rachats.",
+    description:
+      "Le capital afflue et transforme ta startup en machine a rachats.",
   },
   {
     id: "ai-platform",
@@ -123,7 +126,8 @@ const defaultUpgrades = [
     baseCost: 7000000,
     incomePerSecondGain: 180000,
     count: 0,
-    description: "Une plateforme logicielle qui genere de la valeur a grande echelle.",
+    description:
+      "Une plateforme logicielle qui genere de la valeur a grande echelle.",
   },
   {
     id: "global-brand",
@@ -132,7 +136,8 @@ const defaultUpgrades = [
     baseCost: 18000000,
     incomePerSecondGain: 500000,
     count: 0,
-    description: "Ta marque devient incontournable et vend presque toute seule.",
+    description:
+      "Ta marque devient incontournable et vend presque toute seule.",
   },
   {
     id: "quantum-automation",
@@ -141,7 +146,8 @@ const defaultUpgrades = [
     baseCost: 45000000,
     incomePerSecondGain: 1300000,
     count: 0,
-    description: "Des systemes ultra-avances font exploser la cadence de production.",
+    description:
+      "Des systemes ultra-avances font exploser la cadence de production.",
   },
   {
     id: "megacity-campus",
@@ -150,7 +156,8 @@ const defaultUpgrades = [
     baseCost: 120000000,
     incomePerSecondGain: 3200000,
     count: 0,
-    description: "Une ville entiere tourne autour de ton entreprise et de ses revenus.",
+    description:
+      "Une ville entiere tourne autour de ton entreprise et de ses revenus.",
   },
   {
     id: "elite-founder-school",
@@ -159,7 +166,8 @@ const defaultUpgrades = [
     baseCost: 300000000,
     incomePerSecondGain: 8000000,
     count: 0,
-    description: "Tu formes une generation complete de leaders qui enrichissent ton empire.",
+    description:
+      "Tu formes une generation complete de leaders qui enrichissent ton empire.",
   },
 ];
 

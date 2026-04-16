@@ -1,7 +1,12 @@
+import { memo } from "react";
+
 const cardClassName =
   "rounded-[1.35rem] border border-border/90 bg-card px-4 py-4 shadow-lg shadow-primary/8 sm:px-5 flex flex-col justify-between";
 
-export default function GameStatsCard({ eyebrow, children }) {
+export const GameStatsCard = memo(function GameStatsCard({
+  eyebrow,
+  children,
+}) {
   return (
     <div className={cardClassName}>
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
@@ -12,4 +17,4 @@ export default function GameStatsCard({ eyebrow, children }) {
       </div>
     </div>
   );
-}
+});

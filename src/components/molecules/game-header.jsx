@@ -1,4 +1,4 @@
-import IncomeDisplay from "../atoms/income-display";
+import { IncomeDisplay } from "../atoms/income-display";
 import MoneyDisplay from "../atoms/money-display";
 
 export default function GameHeader({ money }) {

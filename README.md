@@ -60,3 +60,11 @@ View -> dispatch(Action) -> Store -> render(View)
 2. Si le JSON de sauvegarde est corrompu, invalide ou ne respecte pas le format attendu, il est ignore au chargement. Le jeu repart alors sur un etat initial propre plutot que de planter.
 3. Le champ `version` sert a identifier le format de la sauvegarde. Il permet de verifier qu'une ancienne sauvegarde est encore compatible avec la structure actuelle du store, et de la refuser si ce n'est plus le cas.
 4. Les donnees sauvegardees sont `money`, `clickValue`, `incomePerSecond`, `upgrades`, `totalClicks` et `totalEarned`, car elles suffisent a restaurer la progression du joueur. Les actions et fonctions du store ne sont pas sauvegardees, car elles appartiennent a la logique applicative et sont recreees automatiquement au chargement.
+
+## TP-11
+
+1. Avant optimisation, certaines cartes de stats rerendaient inutilement parce que leur contenu etait reconstruit sous forme de `children` React a chaque render, ce qui faisait rerender `GameStatsCard` meme quand seule une petite partie de l'affichage changeait.
+2. Les optimisations qui ont eu un impact reel ont ete la stabilisation des composants de stats avec `memo`, la suppression du JSX reconstruit dans les tableaux de cartes, et le remplacement de certains `useEffect` inutiles par des valeurs derivees calculees avec `useMemo`.
+3. L'optimisation la plus rentable a ete de stabiliser le listing des upgrades en memoissant le composant `Upgrade` et en lui passant des props derivees comme `canBuy` et `actualCost` plutot que des valeurs plus instables comme `money`. Cela a limite les rerenders inutiles sur une liste qui peut etre mise a jour tres souvent.
+4. Le tick est un bon revelateur de problemes de performance car il declenche des mises a jour regulieres et tres frequentes. Si un composant rerender inutilement, ce comportement devient vite visible quand il se repete a chaque tick.
+5. Je n'ai pas mis en place des optimisations plus agressives comme du throttle complexe sur toute la persistance ou une multiplication de memoisations partout, car cela alourdissait le code et allait parfois a l'encontre du fonctionnement naturel des libs utilisees pour un gain limite dans ce projet.

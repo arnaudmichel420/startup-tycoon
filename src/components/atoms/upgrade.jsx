@@ -6,6 +6,7 @@ import {
   MegaphoneIcon,
   StudentIcon,
 } from "@phosphor-icons/react";
+import { memo } from "react";
 
 const icons = {
   student: StudentIcon,
@@ -16,11 +17,13 @@ const icons = {
   buildings: BuildingsIcon,
 };
 
-export default function Upgrade({ upgrade, money = 100, onClick }) {
+export const Upgrade = memo(function Upgrade({
+  upgrade,
+  canBuy,
+  onClick,
+  actualCost,
+}) {
   const Icon = icons[upgrade.icon] ?? BriefcaseIcon;
-  const actualCost = Math.round(
-    upgrade.baseCost * Math.pow(1.15, upgrade.count),
-  );
 
   return (
     <div className="group flex items-center justify-between gap-5 rounded-2xl border border-border bg-card p-5 text-card-foreground shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
@@ -49,14 +52,15 @@ export default function Upgrade({ upgrade, money = 100, onClick }) {
               +{upgrade.incomePerSecondGain} / sec
             </span>
             <span className="rounded-md px-2 py-1 text-accent-foreground">
-              {parseFloat(actualCost / upgrade.incomePerSecondGain).toFixed(1)} / click
+              {parseFloat(actualCost / upgrade.incomePerSecondGain).toFixed(1)}{" "}
+              / click
             </span>
           </div>
         </div>
       </div>
 
       <button
-        disabled={money <= actualCost}
+        disabled={canBuy}
         onClick={() => onClick(upgrade.id)}
         className="btn-primary shrink-0"
       >
@@ -64,4 +68,4 @@ export default function Upgrade({ upgrade, money = 100, onClick }) {
       </button>
     </div>
   );
-}
+});
