@@ -38,7 +38,7 @@ export default function PageWrapper() {
     <div className="min-h-screen bg-linear-to-b from-background via-background to-secondary/35 text-foreground">
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
         <header className="sticky top-0 z-20 pt-4">
-          <div className="overflow-hidden rounded-[2rem] border border-border/80 bg-card/85 shadow-lg backdrop-blur">
+          <div className="overflow-hidden rounded-4xl border border-border/80 bg-card/85 shadow-lg backdrop-blur">
             <div className="flex flex-col gap-5 px-5 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
@@ -72,7 +72,7 @@ export default function PageWrapper() {
         </main>
 
         <footer className="pb-6">
-          <div className="rounded-[2rem] border border-border/80 bg-card px-6 py-6 shadow-lg">
+          <div className="rounded-4xl border border-border/80 bg-card px-6 py-6 shadow-lg">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">

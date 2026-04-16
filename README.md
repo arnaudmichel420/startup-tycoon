@@ -53,3 +53,10 @@ Schema simple du flux :
 ```text
 View -> dispatch(Action) -> Store -> render(View)
 ```
+
+## TP-10
+
+1. Le store n'est pas sauvegarde a chaque tick, car cela provoquerait trop d'ecritures dans le `localStorage`. Je n'ai pas mis en place de throttle, car cela allait trop a l'encontre du fonctionnement naturel de la lib utilisee et alourdissait le code pour un gain limite dans le cadre de ce projet.
+2. Si le JSON de sauvegarde est corrompu, invalide ou ne respecte pas le format attendu, il est ignore au chargement. Le jeu repart alors sur un etat initial propre plutot que de planter.
+3. Le champ `version` sert a identifier le format de la sauvegarde. Il permet de verifier qu'une ancienne sauvegarde est encore compatible avec la structure actuelle du store, et de la refuser si ce n'est plus le cas.
+4. Les donnees sauvegardees sont `money`, `clickValue`, `incomePerSecond`, `upgrades`, `totalClicks` et `totalEarned`, car elles suffisent a restaurer la progression du joueur. Les actions et fonctions du store ne sont pas sauvegardees, car elles appartiennent a la logique applicative et sont recreees automatiquement au chargement.
