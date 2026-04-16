@@ -1,6 +1,3 @@
-import IncomeDisplay from "../components/atoms/income-display";
-import MoneyDisplay from "../components/atoms/money-display";
-
 export function buildPrimaryStatCards({
   incomePerSecond,
   money,
@@ -10,17 +7,17 @@ export function buildPrimaryStatCards({
     {
       id: "money",
       eyebrow: "Tresorerie",
-      content: <MoneyDisplay money={money} />,
+      value: money,
     },
     {
       id: "income",
       eyebrow: "Revenu passif",
-      content: <IncomeDisplay incomePerSecond={incomePerSecond} />,
+      value: incomePerSecond,
     },
     {
       id: "upgrades",
       eyebrow: "Upgrades poses",
-      content: totalOwnedUpgrades,
+      value: totalOwnedUpgrades,
     },
   ];
 }

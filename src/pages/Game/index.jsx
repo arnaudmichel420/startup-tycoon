@@ -1,8 +1,12 @@
-import ClickButton from "../../components/atoms/click-button";
-import GameInsightCard from "../../components/molecules/game-insight-cards";
-import GameStatsCard from "../../components/molecules/game-stats-cards";
+import { useMemo } from "react";
+import { ClickButton } from "../../components/atoms/click-button";
+import { GameInsightCard } from "../../components/molecules/game-insight-cards";
+import {
+  IncomeStatCard,
+  MoneyStatCard,
+  UpgradesStatCard,
+} from "../../components/molecules/primary-stat-cards";
 import { useGameStore } from "../../store/gameStore";
-import { buildPrimaryStatCards } from "../../utils/stat-cards";
 
 export default function Game() {
   const money = useGameStore((state) => state.money);
@@ -11,39 +15,38 @@ export default function Game() {
   const upgrades = useGameStore((state) => state.upgrades);
   const CLICK = useGameStore((state) => state.CLICK);
 
-  const totalOwnedUpgrades = upgrades.reduce(
-    (total, upgrade) => total + upgrade.count,
-    0,
+  const totalOwnedUpgrades = useMemo(
+    () => upgrades.reduce((total, upgrade) => total + upgrade.count, 0),
+    [upgrades],
   );
 
-  const topUpgrade = () =>
-    [...upgrades].sort((left, right) => right.count - left.count)[0];
+  const topUpgrade = useMemo(
+    () => [...upgrades].sort((left, right) => right.count - left.count)[0],
+    [upgrades],
+  );
 
-  const statCards = buildPrimaryStatCards({
-    incomePerSecond,
-    money,
-    totalOwnedUpgrades,
-  });
-
-  const insightCards = [
-    {
-      id: "momentum",
-      eyebrow: "Momentum",
-      title: "La croissance est enclenchee.",
-      description:
-        "Ton revenu automatique travaille deja pour toi pendant que tu prepares la prochaine vague d'ameliorations.",
-    },
-    {
-      id: "focus",
-      eyebrow: "Focus actuel",
-      title:
-        topUpgrade?.count > 0 ? topUpgrade.name : "Aucune upgrade dominante",
-      description:
-        topUpgrade?.count > 0
-          ? `${topUpgrade.count} exemplaire(s) dominent deja ton economie.`
-          : "Passe par le shop pour lancer ta premiere vraie machine a cash.",
-    },
-  ];
+  const insightCards = useMemo(
+    () => [
+      {
+        id: "momentum",
+        eyebrow: "Momentum",
+        title: "La croissance est enclenchee.",
+        description:
+          "Ton revenu automatique travaille deja pour toi pendant que tu prepares la prochaine vague d'ameliorations.",
+      },
+      {
+        id: "focus",
+        eyebrow: "Focus actuel",
+        title:
+          topUpgrade?.count > 0 ? topUpgrade.name : "Aucune upgrade dominante",
+        description:
+          topUpgrade?.count > 0
+            ? `${topUpgrade.count} exemplaire(s) dominent deja ton economie.`
+            : "Passe par le shop pour lancer ta premiere vraie machine a cash.",
+      },
+    ],
+    [topUpgrade],
+  );
 
   return (
     <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
@@ -66,11 +69,9 @@ export default function Game() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            {statCards.map((card) => (
-              <GameStatsCard key={card.id} eyebrow={card.eyebrow}>
-                {card.content}
-              </GameStatsCard>
-            ))}
+            <MoneyStatCard money={money} />
+            <IncomeStatCard incomePerSecond={incomePerSecond} />
+            <UpgradesStatCard totalOwnedUpgrades={totalOwnedUpgrades} />
           </div>
 
           <div className="flex flex-col gap-3 rounded-2xl border border-primary/15 bg-secondary/35 p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">

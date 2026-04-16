@@ -1,11 +1,19 @@
 import { createBrowserRouter } from "react-router-dom";
 import Game from "../pages/Game";
-import NotFoundPage from "../pages/NotFoundPage";
-import Settings from "../pages/Settings";
-import Shop from "../pages/Shop";
-import Stats from "../pages/Stats";
 import routes from "./routes";
 import PageWrapper from "../layout/page-wrapper";
+import { lazy } from "react";
+
+const Settings = lazy(
+  () => import(/* webpackChunkName: "settings" */ "../pages/Settings"),
+);
+const Shop = lazy(() => import(/* webpackChunkName: "shop" */ "../pages/Shop"));
+const Stats = lazy(
+  () => import(/* webpackChunkName: "stats" */ "../pages/Stats"),
+);
+const NotFoundPage = lazy(
+  () => import(/* webpackChunkName: "notFoundPage" */ "../pages/NotFoundPage"),
+);
 
 const router = createBrowserRouter([
   {

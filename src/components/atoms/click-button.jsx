@@ -1,4 +1,6 @@
-export default function ClickButton({ clickValue, onClick }) {
+import { memo } from "react";
+
+export const ClickButton = memo(function ClickButton({ clickValue, onClick }) {
   return (
     <div className="flex items-center gap-3">
       <button className="btn-primary" onClick={onClick}>
@@ -9,4 +11,4 @@ export default function ClickButton({ clickValue, onClick }) {
       </span>
     </div>
   );
-}
+});
