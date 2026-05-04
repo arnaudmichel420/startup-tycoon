@@ -6,14 +6,14 @@ import {
   MoneyStatCard,
   UpgradesStatCard,
 } from "../../components/molecules/primary-stat-cards";
-import { useGameStore } from "../../store/gameStore";
+import { useSoloGameStore } from "../../store/soloGameStore";
 
-export default function Game() {
-  const money = useGameStore((state) => state.money);
-  const clickValue = useGameStore((state) => state.clickValue);
-  const incomePerSecond = useGameStore((state) => state.incomePerSecond);
-  const upgrades = useGameStore((state) => state.upgrades);
-  const CLICK = useGameStore((state) => state.CLICK);
+export default function Solo() {
+  const money = useSoloGameStore((state) => state.money);
+  const clickValue = useSoloGameStore((state) => state.clickValue);
+  const incomePerSecond = useSoloGameStore((state) => state.incomePerSecond);
+  const upgrades = useSoloGameStore((state) => state.upgrades);
+  const CLICK = useSoloGameStore((state) => state.CLICK);
 
   const totalOwnedUpgrades = useMemo(
     () => upgrades.reduce((total, upgrade) => total + upgrade.count, 0),

@@ -2,34 +2,28 @@ import routes from "@/router/routes";
 import { memo } from "react";
 import { NavLink } from "react-router-dom";
 
-export const Header = memo(function Header() {
+export const SoloHeader = memo(function SoloHeader() {
   const navLinkClassName = ({ isActive }) =>
-    `rounded-full px-4 py-2 text-sm font-semibold tracking-[0.18em] uppercase transition ${
+    `rounded-full px-4 py-2 text-sm font-semibold uppercase transition ${
       isActive
         ? "bg-primary text-primary-foreground shadow-sm"
         : "text-secondary-foreground/80 hover:bg-background/70 hover:text-foreground"
     }`;
+
   return (
     <header className="sticky top-0 z-20 pt-4">
-      <div className="overflow-hidden rounded-4xl border border-border/80 bg-card/85 shadow-lg backdrop-blur">
+      <div className="overflow-hidden rounded-xl border border-border/80 bg-card/85 shadow-lg backdrop-blur">
         <div className="flex flex-col gap-5 px-5 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <div>
-            <NavLink to={routes.accueil}>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
-                Startup Tycoon
-              </p>
-              <h1 className="mt-2 text-2xl font-bold sm:text-3xl">
-                Build, automate, scale.
-              </h1>
-            </NavLink>
-          </div>
+          <NavLink to={routes.accueil}>
+            <p className="text-xs font-semibold uppercase text-primary">
+              Startup Tycoon
+            </p>
+            <h1 className="mt-2 text-2xl font-bold sm:text-3xl">Mode solo</h1>
+          </NavLink>
 
           <nav className="flex flex-wrap gap-2">
             <NavLink className={navLinkClassName} to={routes.solo}>
-              Solo
-            </NavLink>
-            <NavLink className={navLinkClassName} to={routes.multijoueur}>
-              Multijoueur
+              Jeu
             </NavLink>
             <NavLink className={navLinkClassName} to={routes.shop}>
               Shop
@@ -39,6 +33,9 @@ export const Header = memo(function Header() {
             </NavLink>
             <NavLink className={navLinkClassName} to={routes.settings}>
               Settings
+            </NavLink>
+            <NavLink className={navLinkClassName} to={routes.multijoueur}>
+              Multi
             </NavLink>
           </nav>
         </div>

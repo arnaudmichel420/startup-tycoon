@@ -1,17 +1,17 @@
 import { Footer } from "@/components/atoms/footer";
-import { Header } from "@/components/atoms/header";
+import { SoloHeader } from "@/components/atoms/solo-header";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import {
   IncomeStatCard,
   MoneyStatCard,
 } from "../components/molecules/primary-stat-cards";
-import { useGameStore } from "../store/gameStore";
+import { useSoloGameStore } from "../store/soloGameStore";
 
-export default function PageWrapper() {
-  const TICK = useGameStore((state) => state.TICK);
-  const money = useGameStore((state) => state.money);
-  const incomePerSecond = useGameStore((state) => state.incomePerSecond);
+export default function SoloPageWrapper() {
+  const TICK = useSoloGameStore((state) => state.TICK);
+  const money = useSoloGameStore((state) => state.money);
+  const incomePerSecond = useSoloGameStore((state) => state.incomePerSecond);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,7 +26,7 @@ export default function PageWrapper() {
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-background to-secondary/35 text-foreground">
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
-        <Header />
+        <SoloHeader />
         <main className="flex-1 py-8">
           <Outlet />
         </main>

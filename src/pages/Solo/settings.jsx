@@ -1,8 +1,8 @@
 import { ConfirmModal } from "@/components/molecules/confirm-modal";
-import { useGameStore } from "../../store/gameStore";
+import { useSoloGameStore } from "../../store/soloGameStore";
 
 export default function Settings() {
-  const RESET_GAME = useGameStore((state) => state.RESET_GAME);
+  const RESET_GAME = useSoloGameStore((state) => state.RESET_GAME);
   return (
     <>
       <h1 className="text-3xl font-bold">Settings</h1>

@@ -1,27 +1,44 @@
-import { createBrowserRouter } from "react-router-dom";
-import Game from "../pages/Game";
-import routes from "./routes";
-import PageWrapper from "../layout/page-wrapper";
+/* eslint-disable react-refresh/only-export-components */
+import Accueil from "@/pages/Accueil";
 import { lazy } from "react";
+import { createBrowserRouter } from "react-router-dom";
+import MultiPageWrapper from "@/layout/multi-page-wrapper";
+import SoloPageWrapper from "../layout/solo-page-wrapper";
+import routes from "./routes";
 
 const Settings = lazy(
-  () => import(/* webpackChunkName: "settings" */ "../pages/Settings"),
+  () => import(/* webpackChunkName: "settings" */ "../pages/Solo/settings"),
 );
-const Shop = lazy(() => import(/* webpackChunkName: "shop" */ "../pages/Shop"));
+const Shop = lazy(
+  () => import(/* webpackChunkName: "shop" */ "../pages/Solo/shop"),
+);
 const Stats = lazy(
-  () => import(/* webpackChunkName: "stats" */ "../pages/Stats"),
+  () => import(/* webpackChunkName: "stats" */ "../pages/Solo/stats"),
 );
 const NotFoundPage = lazy(
   () => import(/* webpackChunkName: "notFoundPage" */ "../pages/NotFoundPage"),
 );
+const Multijoueur = lazy(
+  () =>
+    import(/* webpackChunkName: "multijoueur" */ "../pages/Multijoueur/game"),
+);
+const MultiShop = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "multijoueur-shop" */ "../pages/Multijoueur/shop"
+    ),
+);
+const Solo = lazy(
+  () => import(/* webpackChunkName: "multijoueur" */ "../pages/Solo/game"),
+);
 
 const router = createBrowserRouter([
   {
-    element: <PageWrapper />,
+    element: <SoloPageWrapper />,
     children: [
       {
-        path: routes.game,
-        element: <Game />,
+        path: routes.solo,
+        element: <Solo />,
       },
       {
         path: routes.settings,
@@ -35,11 +52,28 @@ const router = createBrowserRouter([
         path: routes.stats,
         element: <Stats />,
       },
+    ],
+  },
+  {
+    element: <MultiPageWrapper />,
+    children: [
       {
-        path: "*",
-        element: <NotFoundPage />,
+        path: routes.multijoueur,
+        element: <Multijoueur />,
+      },
+      {
+        path: routes.multiShop,
+        element: <MultiShop />,
       },
     ],
+  },
+  {
+    element: <Accueil />,
+    path: routes.accueil,
+  },
+  {
+    element: <Accueil />,
+    path: "*",
   },
 ]);
 export default router;

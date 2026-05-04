@@ -6,14 +6,14 @@ import {
   MoneyStatCard,
   UpgradesStatCard,
 } from "../../components/molecules/primary-stat-cards";
-import { useGameStore } from "../../store/gameStore";
+import { useSoloGameStore } from "../../store/soloGameStore";
 import { useDebounce } from "@/hooks/use-debounce";
 
 export default function Shop() {
-  const money = useGameStore((state) => state.money);
-  const incomePerSecond = useGameStore((state) => state.incomePerSecond);
-  const upgrades = useGameStore((state) => state.upgrades);
-  const BUY_UPGRADE = useGameStore((state) => state.BUY_UPGRADE);
+  const money = useSoloGameStore((state) => state.money);
+  const incomePerSecond = useSoloGameStore((state) => state.incomePerSecond);
+  const upgrades = useSoloGameStore((state) => state.upgrades);
+  const BUY_UPGRADE = useSoloGameStore((state) => state.BUY_UPGRADE);
   const [inputValue, setInputValue] = useState("");
   const debouncedValue = useDebounce(inputValue, 300);
 

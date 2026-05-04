@@ -12,10 +12,13 @@
 ## Structure
 
 - `src/assets` : contient les ressources statiques du projet comme les images et icones.
-- `src/components/atoms` : contient les composants UI simples comme `click-button.jsx`, `money-display.jsx`, `income-display.jsx` et `upgrade.jsx`.
-- `src/components/molecules` : contient des composants composes comme `game-stats-cards.jsx`, `game-insight-cards.jsx` et `game-header.jsx`.
+- `src/components/atoms` : contient les composants UI simples comme `click-button.jsx`, `money-display.jsx`, `income-display.jsx`, `search-input.jsx` et `upgrade.jsx`.
+- `src/components/molecules` : contient des composants composes comme `confirm-modal.jsx`, `game-insight-cards.jsx`, `game-stats-cards.jsx` et `primary-stat-cards.jsx`.
+- `src/components/ui` : contient les composants UI reutilisables issus de `shadcn`, comme `button.jsx`, `input.jsx` et `alert-dialog.jsx`.
 - `src/data` : contient les donnees statiques du projet, notamment `upgrades.js`.
+- `src/hooks` : contient les hooks reutilisables du projet, notamment `use-debounce.jsx`.
 - `src/layout` : contient la structure generale de l'application, notamment `page-wrapper.jsx`.
+- `src/lib` : contient des utilitaires partages relies a l'UI, notamment `utils.js`.
 - `src/pages` : contient les pages routees de l'application comme `Game`, `Shop`, `Stats`, `Settings` et `NotFoundPage`.
 - `src/router` : contient la configuration des routes dans `router.jsx` et `routes.js`.
 - `src/services` : est prevu pour les fonctions d'acces aux donnees et aux futures sources externes.

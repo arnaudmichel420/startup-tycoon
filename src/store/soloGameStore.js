@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import defaultUpgrades from "../data/upgrades";
 
-export const useGameStore = create(
+export const useSoloGameStore = create(
   persist(
     (set) => ({
       money: 0,
