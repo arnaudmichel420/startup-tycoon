@@ -1,5 +1,4 @@
 import routes from "@/router/routes";
-import { getToken } from "@clerk/react";
 import {
   ChartLineUpIcon,
   GlobeHemisphereWestIcon,
@@ -7,7 +6,6 @@ import {
   UsersThreeIcon,
 } from "@phosphor-icons/react";
 import { UserIcon } from "lucide-react";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const modeCards = [
@@ -32,14 +30,7 @@ const modeCards = [
     SecondIcon: UsersThreeIcon,
   },
 ];
-async function toto() {
-  const token = await getToken();
-  console.log(token);
-}
 export default function Accueil() {
-  useEffect(() => {
-    toto();
-  }, []);
   return (
     <main className="min-h-screen bg-linear-to-b from-background via-background to-secondary/35 px-4 py-8 text-foreground sm:px-6 lg:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-center gap-8">

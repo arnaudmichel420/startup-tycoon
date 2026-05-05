@@ -29,6 +29,9 @@ export const SoloHeader = memo(function SoloHeader() {
             <NavLink className={navLinkClassName} to={routes.shop}>
               Shop
             </NavLink>
+            <NavLink className={navLinkClassName} to={routes.stats}>
+              Stats
+            </NavLink>
             <NavLink className={navLinkClassName} to={routes.settings}>
               Settings
             </NavLink>

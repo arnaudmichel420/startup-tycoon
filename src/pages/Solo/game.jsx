@@ -13,7 +13,10 @@ export default function Solo() {
   const clickValue = useSoloGameStore((state) => state.clickValue);
   const incomePerSecond = useSoloGameStore((state) => state.incomePerSecond);
   const upgrades = useSoloGameStore((state) => state.upgrades);
+  const roundStatus = useSoloGameStore((state) => state.roundStatus);
   const CLICK = useSoloGameStore((state) => state.CLICK);
+  const START_ROUND = useSoloGameStore((state) => state.START_ROUND);
+  const isRoundPlaying = roundStatus === "playing";
 
   const totalOwnedUpgrades = useMemo(
     () => upgrades.reduce((total, upgrade) => total + upgrade.count, 0),
@@ -66,6 +69,11 @@ export default function Solo() {
               Chaque clic finance ta prochaine phase de croissance. Plus ton
               revenu passif grimpe, plus ton empire prend de la vitesse.
             </p>
+            {roundStatus !== "playing" && (
+              <button className="btn-primary mt-3" onClick={START_ROUND}>
+                Start
+              </button>
+            )}
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -80,10 +88,16 @@ export default function Solo() {
                 Action principale
               </p>
               <p className="text-sm text-muted-foreground">
-                Lance un nouveau sprint et gagne {clickValue}$ a chaque clic.
+                {isRoundPlaying
+                  ? `Lance un nouveau sprint et gagne ${clickValue}$ a chaque clic.`
+                  : "Lance une partie de 5 minutes pour commencer a scorer."}
               </p>
             </div>
-            <ClickButton clickValue={clickValue} onClick={CLICK} />
+            <ClickButton
+              clickValue={clickValue}
+              disabled={!isRoundPlaying}
+              onClick={CLICK}
+            />
           </div>
         </div>
       </div>

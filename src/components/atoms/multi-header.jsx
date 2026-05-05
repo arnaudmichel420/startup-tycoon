@@ -31,9 +31,6 @@ export const MultiHeader = memo(function MultiHeader() {
             <NavLink className={navLinkClassName} to={routes.multiShop}>
               Shop multi
             </NavLink>
-            <NavLink className={navLinkClassName} to={routes.stats}>
-              Stats
-            </NavLink>
             <NavLink className={navLinkClassName} to={routes.leaderboard}>
               Leaderboard
             </NavLink>

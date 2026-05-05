@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import defaultUpgrades from "../data/upgrades";
 
+const ROUND_DURATION_SECONDS = 5 * 60;
+
 export const useSoloGameStore = create(
   persist(
     (set) => ({
@@ -11,18 +13,47 @@ export const useSoloGameStore = create(
       upgrades: defaultUpgrades,
       totalClicks: 0,
       totalEarned: 0,
+      roundStatus: "idle",
+      remainingSeconds: ROUND_DURATION_SECONDS,
+      START_ROUND: () =>
+        set(() => ({
+          money: 0,
+          clickValue: 1,
+          incomePerSecond: 0,
+          upgrades: defaultUpgrades,
+          totalClicks: 0,
+          totalEarned: 0,
+          roundStatus: "playing",
+          remainingSeconds: ROUND_DURATION_SECONDS,
+        })),
       CLICK: () =>
-        set((state) => ({
-          money: state.money + state.clickValue,
-          totalClicks: state.totalClicks + 1,
-        })),
+        set((state) => {
+          if (state.roundStatus !== "playing") return state;
+
+          return {
+            money: state.money + state.clickValue,
+            totalClicks: state.totalClicks + 1,
+          };
+        }),
       TICK: () =>
-        set((state) => ({
-          money: state.money + state.incomePerSecond,
-          totalEarned: state.money + state.incomePerSecond,
-        })),
+        set((state) => {
+          if (state.roundStatus !== "playing") return state;
+
+          const nextRemainingSeconds = Math.max(state.remainingSeconds - 1, 0);
+          const nextMoney = state.money + state.incomePerSecond;
+
+          return {
+            money: nextMoney,
+            totalEarned: nextMoney,
+            remainingSeconds: nextRemainingSeconds,
+            roundStatus:
+              nextRemainingSeconds === 0 ? "finished" : state.roundStatus,
+          };
+        }),
       BUY_UPGRADE: (id) => {
         set((state) => {
+          if (state.roundStatus !== "playing") return state;
+
           const currentUpgrade = state.upgrades.find(
             (upgrade) => upgrade.id === id,
           );
@@ -53,6 +84,8 @@ export const useSoloGameStore = create(
           upgrades: defaultUpgrades,
           totalClicks: 0,
           totalEarned: 0,
+          roundStatus: "idle",
+          remainingSeconds: ROUND_DURATION_SECONDS,
         })),
     }),
     {

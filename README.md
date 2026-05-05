@@ -101,3 +101,17 @@ View -> dispatch(Action) -> Store -> render(View)
 1. Dans l'onglet Network, j'observe des requetes vers `arriving-troll-42.clerk.accounts.dev`, notamment `POST /v1/environment` et `GET /v1/client`. Elles servent a recuperer la configuration Clerk, l'etat du client, la session active et le dernier token actif.
 2. Quand l'application appelle une API backend protegee, le header attendu est `Authorization: Bearer <token>`. Le token est recupere cote client via Clerk, puis envoye au backend pour verification.
 3. Cote client, Clerk garde l'etat d'authentification en memoire dans son instance JavaScript et dans le contexte React fourni par `ClerkProvider`. Le token peut etre obtenu via les hooks Clerk, par exemple `useAuth().getToken()`.
+
+### Partie 3 :
+
+1. Le middleware qui verifie le JWT est le middleware d'authentification du serveur. Il lit le header `Authorization`, extrait le token apres `Bearer`, verifie sa signature et laisse passer la requete seulement si le token est valide.
+2. Le serveur n'a pas besoin d'appeler Clerk a chaque requete, car le JWT est signe avec `RS256`. Le serveur peut verifier la signature avec la cle publique de Clerk. Si la signature, l'expiration et l'emetteur sont valides, le token est accepte.
+3. Une fois le token verifie, le `user_id` est recupere depuis le champ `sub` du payload JWT, puis stocke dans l'objet de requete cote serveur.
+4. Si on appelle `/api/games/me` sans header `Authorization`, le serveur doit renvoyer une erreur `401 Unauthorized`, car il ne peut pas identifier l'utilisateur.
+5. Non, le serveur ne valide pas vraiment le `score` envoye par le client : il ne verifie pas de plafond, ni la coherence avec la duree de la partie. Le probleme est qu'un joueur peut modifier la requete et envoyer un score enorme, qui serait accepte comme un vrai score. Pour eviter ca, le serveur devrait calculer ou verifier le score lui-meme a partir des actions, du temps de jeu, des upgrades et des revenus autorises.
+
+1. Un state client est un etat gere localement par le navigateur, utile pour l'interface ou une partie locale. Dans le projet, `money` en cours de partie solo et le timer local sont des exemples de state client.
+2. Un state serveur est une donnee dont la source de verite est le backend. Dans le projet, le leaderboard et l'historique des parties multijoueur sont des exemples de state serveur.
+3. `useState` + `useEffect` + `fetch` est un anti-pattern pour gerer les donnees serveur, car on recode a la main une logique complexe de synchronisation. Le composant doit gerer lui-meme le chargement, les erreurs, le cache, les rechargements et les donnees obsoletes.
+4. Cette approche naive ne resout pas bien le cache, la deduplication des requetes et le refetch en arriere-plan. Elle gere aussi mal l'invalidation, les erreurs et les etats de chargement quand l'application grandit.
+
