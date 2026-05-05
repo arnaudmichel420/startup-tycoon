@@ -71,3 +71,33 @@ View -> dispatch(Action) -> Store -> render(View)
 3. L'optimisation la plus rentable a ete de stabiliser le listing des upgrades en memoissant le composant `Upgrade` et en lui passant des props derivees comme `canBuy` et `actualCost` plutot que des valeurs plus instables comme `money`. Cela a limite les rerenders inutiles sur une liste qui peut etre mise a jour tres souvent.
 4. Le tick est un bon revelateur de problemes de performance car il declenche des mises a jour regulieres et tres frequentes. Si un composant rerender inutilement, ce comportement devient vite visible quand il se repete a chaque tick.
 5. Je n'ai pas mis en place des optimisations plus agressives comme du throttle complexe sur toute la persistance ou une multiplication de memoisations partout, car cela alourdissait le code et allait parfois a l'encontre du fonctionnement naturel des libs utilisees pour un gain limite dans ce projet.
+
+## TP-13
+
+1. Les cookies Clerk observes sur `localhost` sont `__clerk_db_jwt`, `__clerk_db_jwt_V6kMRCRO`, `__session`, `__session_V6kMRCRO`, `__client_uat`, `__client_uat_V6kMRCRO` et `clerk_active_context`. D'autres cookies existent aussi sur les domaines Clerk ou Cloudflare, comme `__cf_bm`, `_cfuvid`, `ajs_anonymous_id` et `ajs_user_id`.
+2. Attributs releves :
+   - `__clerk_db_jwt` : `HttpOnly=Non`, `Secure=Non`, `SameSite=Lax`, `localhost`, `2027-05`.
+   - `__clerk_db_jwt_V6kMRCRO` : `HttpOnly=Non`, `Secure=Non`, `SameSite=Lax`, `localhost`, `2027-05`.
+   - `__session` : `HttpOnly=Non`, `Secure=Non`, `SameSite=Lax`, `localhost`, `2027-05`.
+   - `__session_V6kMRCRO` : `HttpOnly=Non`, `Secure=Non`, `SameSite=Lax`, `localhost`, `2027-05`.
+   - `__client_uat` : `HttpOnly=Non`, `Secure=Non`, `SameSite=Strict`, `localhost`, `2027-05`.
+   - `__client_uat_V6kMRCRO` : `HttpOnly=Non`, `Secure=Non`, `SameSite=Strict`, `localhost`, `2027-05`.
+   - `clerk_active_context` : `HttpOnly=Non`, `Secure=Oui`, `SameSite=Non renseigne`, `localhost`, `Session`.
+   - `__cf_bm` : `HttpOnly=Oui`, `Secure=Oui`, `SameSite=None`, Clerk/Cloudflare, `2026-05`.
+   - `_cfuvid` : `HttpOnly=Oui`, `Secure=Oui`, `SameSite=None`, Clerk/Cloudflare, `Session`.
+3. Le cookie `__session` contient le JWT de session Clerk. Il permet de representer la session active de l'utilisateur connecte et de maintenir l'authentification entre les pages. Il contient notamment des informations comme l'utilisateur, la session et l'expiration.
+4. Avec `document.cookie`, je vois seulement les cookies accessibles par JavaScript sur `localhost`, comme `__clerk_db_jwt`, `__session`, `__client_uat` et `clerk_active_context`. Je ne vois pas les cookies `HttpOnly`, car ils sont proteges contre la lecture JavaScript. Je ne vois pas non plus les cookies des autres domaines, comme `.clerk.com`, car `document.cookie` ne lit que les cookies du domaine courant.
+
+### Analyse du JWT
+
+2. Le JWT contient un `header` avec les metadonnees de signature, un `payload` avec les informations de session, et une `signature` qui permet au serveur de verifier que le token n'a pas ete modifie.
+3. L'algorithme utilise est `RS256`.
+4. Le payload contient notamment `azp` (`http://localhost:5173`), `exp`, `iat`, `iss`, `nbf`, `sid`, `sts`, `sub` et `v`. Le champ `sub` correspond a l'utilisateur Clerk (`user_3DGJGd1FQ0jyVXN9e0vURjtBPjw`).
+5. On ne peut pas modifier le payload cote client pour se faire passer pour un autre utilisateur. Si je modifie `sub`, la signature ne correspond plus au contenu du token, donc le serveur doit refuser le token.
+6. La duree de vie du token est de `60` secondes, car `exp - iat = 1777903812 - 1777903752`.
+
+### Network
+
+1. Dans l'onglet Network, j'observe des requetes vers `arriving-troll-42.clerk.accounts.dev`, notamment `POST /v1/environment` et `GET /v1/client`. Elles servent a recuperer la configuration Clerk, l'etat du client, la session active et le dernier token actif.
+2. Quand l'application appelle une API backend protegee, le header attendu est `Authorization: Bearer <token>`. Le token est recupere cote client via Clerk, puis envoye au backend pour verification.
+3. Cote client, Clerk garde l'etat d'authentification en memoire dans son instance JavaScript et dans le contexte React fourni par `ClerkProvider`. Le token peut etre obtenu via les hooks Clerk, par exemple `useAuth().getToken()`.

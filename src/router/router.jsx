@@ -3,6 +3,7 @@ import Accueil from "@/pages/Accueil";
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import MultiPageWrapper from "@/layout/multi-page-wrapper";
+import PublicMultiPageWrapper from "@/layout/public-multi-page-wrapper";
 import SoloPageWrapper from "../layout/solo-page-wrapper";
 import routes from "./routes";
 
@@ -13,7 +14,13 @@ const Shop = lazy(
   () => import(/* webpackChunkName: "shop" */ "../pages/Solo/shop"),
 );
 const Stats = lazy(
-  () => import(/* webpackChunkName: "stats" */ "../pages/Solo/stats"),
+  () => import(/* webpackChunkName: "stats" */ "../pages/Multijoueur/stats"),
+);
+const Leaderboard = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "leaderboard" */ "../pages/Multijoueur/leaderboard"
+    ),
 );
 const NotFoundPage = lazy(
   () => import(/* webpackChunkName: "notFoundPage" */ "../pages/NotFoundPage"),
@@ -48,10 +55,6 @@ const router = createBrowserRouter([
         path: routes.shop,
         element: <Shop />,
       },
-      {
-        path: routes.stats,
-        element: <Stats />,
-      },
     ],
   },
   {
@@ -64,6 +67,19 @@ const router = createBrowserRouter([
       {
         path: routes.multiShop,
         element: <MultiShop />,
+      },
+      {
+        path: routes.stats,
+        element: <Stats />,
+      },
+    ],
+  },
+  {
+    element: <PublicMultiPageWrapper />,
+    children: [
+      {
+        path: routes.leaderboard,
+        element: <Leaderboard />,
       },
     ],
   },
