@@ -27,6 +27,14 @@
 - `src/styles` : est prevu pour les styles globaux et les fichiers de mise en forme communs.
 - `src/utils` : contient les fonctions utilitaires comme `formatNumber.js` et `stat-cards.jsx`.
 
+## Mitigation
+
+Regles anti-XSS cote front :
+
+- Echappez tout contenu utilisateur rendu dans le DOM.
+- Ne jamais utiliser `innerHTML` / `dangerouslySetInnerHTML` avec du contenu non sanitise.
+- Valider aussi cote serveur pour ajouter une protection supplementaire.
+
 ## TP-5
 
 1. L'application est montee dans le DOM dans le fichier `src/main.jsx`.
@@ -110,8 +118,47 @@ View -> dispatch(Action) -> Store -> render(View)
 4. Si on appelle `/api/games/me` sans header `Authorization`, le serveur doit renvoyer une erreur `401 Unauthorized`, car il ne peut pas identifier l'utilisateur.
 5. Non, le serveur ne valide pas vraiment le `score` envoye par le client : il ne verifie pas de plafond, ni la coherence avec la duree de la partie. Le probleme est qu'un joueur peut modifier la requete et envoyer un score enorme, qui serait accepte comme un vrai score. Pour eviter ca, le serveur devrait calculer ou verifier le score lui-meme a partir des actions, du temps de jeu, des upgrades et des revenus autorises.
 
-1. Un state client est un etat gere localement par le navigateur, utile pour l'interface ou une partie locale. Dans le projet, `money` en cours de partie solo et le timer local sont des exemples de state client.
-2. Un state serveur est une donnee dont la source de verite est le backend. Dans le projet, le leaderboard et l'historique des parties multijoueur sont des exemples de state serveur.
-3. `useState` + `useEffect` + `fetch` est un anti-pattern pour gerer les donnees serveur, car on recode a la main une logique complexe de synchronisation. Le composant doit gerer lui-meme le chargement, les erreurs, le cache, les rechargements et les donnees obsoletes.
-4. Cette approche naive ne resout pas bien le cache, la deduplication des requetes et le refetch en arriere-plan. Elle gere aussi mal l'invalidation, les erreurs et les etats de chargement quand l'application grandit.
+6. Un state client est un etat gere localement par le navigateur, utile pour l'interface ou une partie locale. Dans le projet, `money` en cours de partie solo et le timer local sont des exemples de state client.
+7. Un state serveur est une donnee dont la source de verite est le backend. Dans le projet, le leaderboard et l'historique des parties multijoueur sont des exemples de state serveur.
+8. `useState` + `useEffect` + `fetch` est un anti-pattern pour gerer les donnees serveur, car on recode a la main une logique complexe de synchronisation. Le composant doit gerer lui-meme le chargement, les erreurs, le cache, les rechargements et les donnees obsoletes.
+9. Cette approche naive ne resout pas bien le cache, la deduplication des requetes et le refetch en arriere-plan. Elle gere aussi mal l'invalidation, les erreurs et les etats de chargement quand l'application grandit.
 
+### Partie 4 : XSS
+
+#### Experience 1 : XSS naif
+
+Clerk a bloque l'envoi de la valeur `<img src=x onerror="alert('XSS')">` avec une page Cloudflare "Sorry, you have been blocked". Le payload n'a donc pas pu etre sauvegarde dans le compte de test.
+
+Si le framework n'echappe pas automatiquement le contenu, ce texte est interprete comme du HTML. Avec `dangerouslySetInnerHTML` en React, l'image serait creee, son chargement echouerait, puis le `onerror` executerait `alert('XSS')` sur le navigateur des joueurs qui consultent le leaderboard.
+
+Avec le rendu React normal, le contenu est echappe et affiche comme du texte. Le script ne s'execute pas.
+
+#### Experience 2 : XSS de vol de session
+
+1. Avec `document.cookie`, je peux voir certains cookies Clerk sur `localhost`, comme `__session`, car dans mon environnement de dev ils ne sont pas en `HttpOnly`. Par contre, les cookies Clerk/Cloudflare marques `HttpOnly` ne sont pas lisibles par JavaScript.
+2. Si un vrai cookie de session est en `HttpOnly: false`, un script XSS peut le lire avec `document.cookie` et l'envoyer a un attaquant. L'attaquant peut alors tenter de reutiliser la session de l'utilisateur.
+3. Clerk ne stocke pas le JWT dans `localStorage`. Le token est gere par le SDK Clerk et recupere via `getToken()`. C'est plus defensif, car `localStorage` est lisible par n'importe quel script execute sur la page en cas de XSS.
+
+#### Experience 3 : CSRF en pratique
+
+1. Si l'API acceptait `POST /api/games` seulement avec un cookie de session automatique, un site malveillant pourrait tenter de forcer le navigateur a envoyer un faux score avec un formulaire cache.
+2. Avec `attack.html`, la requete est bloquee par le serveur : `CORS: origin http://127.0.0.1:5500 not allowed`. Le header `Authorization: Bearer` n'est pas envoye, car il est ajoute par notre application JavaScript, pas automatiquement par le navigateur.
+3. Si l'API utilisait le cookie `__session` au lieu du header `Authorization`, le navigateur pourrait envoyer ce cookie automatiquement selon les regles `SameSite`. Le risque CSRF serait donc plus important.
+
+#### Mitigation CSRF
+
+1. `SameSite=Lax` autorise le cookie dans certaines navigations cross-site, mais limite son envoi sur les requetes dangereuses. `SameSite=Strict` est plus restrictif : le cookie n'est envoye que dans un contexte meme site. Dans mes cookies Clerk, `__session` est en `SameSite=Lax` et `__client_uat` en `SameSite=Strict`.
+2. Notre API est protegee par design car elle utilise `Authorization: Bearer`. Un formulaire HTML externe ne peut pas ajouter ce header, et le serveur refuse les origins non autorisees via CORS.
+3. Un double-submit token est un token CSRF envoye a la fois dans un cookie et dans la requete. Le serveur compare les deux valeurs. C'est utile quand l'authentification repose sur des cookies envoyes automatiquement.
+
+#### Experience 4 : CSP actuelle
+
+La reponse principale renvoie `200 OK`, mais aucun header `Content-Security-Policy` n'est present.
+
+#### Experience 5 : Durcir la CSP
+
+1. `default-src 'self'` bloque par defaut le chargement de ressources venant d'autres domaines. Seules les ressources du meme origin que l'application sont autorisees, sauf si une directive plus precise les autorise.
+2. `connect-src` inclut `http://localhost:3000` pour les appels API backend et `ws://localhost:3000` pour les futurs WebSocket du multijoueur en TP 14.
+3. `'unsafe-inline'` dans `style-src` autorise les styles inline. C'est un compromis courant car beaucoup de libs UI injectent du style inline, mais c'est problematique car cela affaiblit la CSP.
+4. Avec la CSP activee, un `<script>alert(1)</script>` inline est bloque, car `script-src` n'autorise pas `'unsafe-inline'`.
+5. En production, on commence avec `Content-Security-Policy-Report-Only` pour observer les violations sans casser l'application. Une fois les erreurs corrigees, on passe a `Content-Security-Policy` pour bloquer réellement.
