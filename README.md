@@ -162,3 +162,12 @@ La reponse principale renvoie `200 OK`, mais aucun header `Content-Security-Poli
 3. `'unsafe-inline'` dans `style-src` autorise les styles inline. C'est un compromis courant car beaucoup de libs UI injectent du style inline, mais c'est problematique car cela affaiblit la CSP.
 4. Avec la CSP activee, un `<script>alert(1)</script>` inline est bloque, car `script-src` n'autorise pas `'unsafe-inline'`.
 5. En production, on commence avec `Content-Security-Policy-Report-Only` pour observer les violations sans casser l'application. Une fois les erreurs corrigees, on passe a `Content-Security-Policy` pour bloquer réellement.
+
+### Partie 5 : Analyse critique finale
+
+1. Clerk evite de coder la creation de compte, la connexion, la gestion des sessions et la verification des tokens. Il fournit aussi des composants prets a l'emploi et une integration OAuth.
+2. Avec Clerk, je n'ai pas vraiment appris a stocker les mots de passe, gerer les refresh tokens ou construire un systeme complet de verification email / reset password.
+3. Sans Clerk, les points critiques seraient le hash des mots de passe, la gestion des sessions, la rotation des tokens, la protection CSRF/XSS et la verification email / recuperation de mot de passe.
+4. TanStack Query n'est pas juste un `fetch` plus pratique : il gere le cache serveur, les invalidations, les retries, les etats de chargement, les erreurs, la deduplication et les mises a jour optimistes.
+5. L'authentification verifie qui est l'utilisateur. L'autorisation verifie ce qu'il a le droit de faire. L'application gere surtout l'authentification avec Clerk et un debut d'autorisation avec les routes protegees et les endpoints backend authentifies.
+6. Oui, le backend fourni fait encore confiance au score envoye par le client, avec seulement une validation de forme. Au TP 14, ce sera different car le serveur deviendra source de verite du round : il calculera l'etat, les scores, les events et les actions en temps reel.
