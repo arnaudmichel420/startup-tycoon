@@ -1,3 +1,4 @@
+import { AuthHeaderActions } from "@/components/atoms/auth-header-actions";
 import routes from "@/router/routes";
 import { memo } from "react";
 import { NavLink } from "react-router-dom";
@@ -21,7 +22,7 @@ export const SoloHeader = memo(function SoloHeader() {
             <h1 className="mt-2 text-2xl font-bold sm:text-3xl">Mode solo</h1>
           </NavLink>
 
-          <nav className="flex flex-wrap gap-2">
+          <nav className="flex flex-wrap items-center gap-2">
             <NavLink className={navLinkClassName} to={routes.solo}>
               Jeu
             </NavLink>
@@ -37,6 +38,7 @@ export const SoloHeader = memo(function SoloHeader() {
             <NavLink className={navLinkClassName} to={routes.multijoueur}>
               Multi
             </NavLink>
+            <AuthHeaderActions />
           </nav>
         </div>
       </div>

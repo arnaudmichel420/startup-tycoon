@@ -4,7 +4,9 @@ const routes = {
   multijoueur: "/multijoueur",
   settings: "/solo/settings",
   shop: "/solo/shop",
-  stats: "/solo/stats",
+  stats: "/stats",
   multiShop: "/multijoueur/shop",
+  leaderboard: "/multijoueur/leaderboard",
+  login: "/connexion",
 };
 export default routes;

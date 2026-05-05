@@ -1,5 +1,11 @@
 import routes from "@/router/routes";
-import { ChartLineUpIcon, GlobeHemisphereWestIcon, LightningIcon } from "@phosphor-icons/react";
+import {
+  ChartLineUpIcon,
+  GlobeHemisphereWestIcon,
+  LightningIcon,
+  UsersThreeIcon,
+} from "@phosphor-icons/react";
+import { UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const modeCards = [
@@ -11,6 +17,7 @@ const modeCards = [
     to: routes.solo,
     action: "Jouer en solo",
     Icon: LightningIcon,
+    SecondIcon: UserIcon,
   },
   {
     id: "multi",
@@ -20,9 +27,9 @@ const modeCards = [
     to: routes.multijoueur,
     action: "Rejoindre le multi",
     Icon: GlobeHemisphereWestIcon,
+    SecondIcon: UsersThreeIcon,
   },
 ];
-
 export default function Accueil() {
   return (
     <main className="min-h-screen bg-linear-to-b from-background via-background to-secondary/35 px-4 py-8 text-foreground sm:px-6 lg:px-8">
@@ -35,9 +42,8 @@ export default function Accueil() {
             Choisis ton mode de jeu
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
-            Le solo garde les regles locales historiques. Le multijoueur
-            prepare les rounds synchronises avec bonus, malus, sabotage et
-            leaderboard.
+            Le solo garde les regles locales historiques. Le multijoueur prepare
+            les rounds synchronises avec bonus, malus, sabotage et leaderboard.
           </p>
         </section>
 
@@ -63,14 +69,27 @@ export default function Accueil() {
 
               <div className="mt-8 flex items-center justify-between gap-4">
                 <span className="btn-primary">{mode.action}</span>
-                <ChartLineUpIcon
-                  className="h-7 w-7 text-primary"
+                <mode.SecondIcon
+                  className="h-8 w-8 text-primary"
                   weight="duotone"
                 />
               </div>
             </Link>
           ))}
         </section>
+
+        <div className="flex justify-center">
+          <Link
+            className="inline-flex items-center gap-3 rounded-full border border-border bg-card px-5 py-3 text-sm font-semibold uppercase text-secondary-foreground shadow-sm transition hover:bg-background hover:text-foreground"
+            to={routes.leaderboard}
+          >
+            <ChartLineUpIcon
+              className="h-5 w-5 text-primary"
+              weight="duotone"
+            />
+            Voir le leaderboard
+          </Link>
+        </div>
       </div>
     </main>
   );

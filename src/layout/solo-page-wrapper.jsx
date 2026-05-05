@@ -6,12 +6,17 @@ import {
   IncomeStatCard,
   MoneyStatCard,
 } from "../components/molecules/primary-stat-cards";
+import { RoundTimerCard } from "../components/molecules/round-timer-card";
+import { SoloRoundRecapModal } from "../components/molecules/solo-round-recap-modal";
 import { useSoloGameStore } from "../store/soloGameStore";
 
 export default function SoloPageWrapper() {
   const TICK = useSoloGameStore((state) => state.TICK);
+  const START_ROUND = useSoloGameStore((state) => state.START_ROUND);
   const money = useSoloGameStore((state) => state.money);
   const incomePerSecond = useSoloGameStore((state) => state.incomePerSecond);
+  const remainingSeconds = useSoloGameStore((state) => state.remainingSeconds);
+  const roundStatus = useSoloGameStore((state) => state.roundStatus);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,9 +37,15 @@ export default function SoloPageWrapper() {
         </main>
         <Footer />
         <div className="fixed right-4 bottom-4 z-30 grid gap-3 sm:right-6 sm:bottom-6">
+          <RoundTimerCard
+            onStart={START_ROUND}
+            remainingSeconds={remainingSeconds}
+            status={roundStatus}
+          />
           <MoneyStatCard money={money} />
           <IncomeStatCard incomePerSecond={incomePerSecond} />
         </div>
+        <SoloRoundRecapModal open={roundStatus === "finished"} />
       </div>
     </div>
   );
